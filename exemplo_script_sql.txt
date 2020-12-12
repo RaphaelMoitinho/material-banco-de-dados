@@ -1,0 +1,46 @@
+-- criar a tabela curso
+
+create table curso (
+    idCurso int primary key identity(1,1),
+    nomeCurso varchar(50),
+    coordenador varchar(100)
+);
+
+-- inserir dados em curso
+insert into curso values 
+    ('ADS', 'Gerson'),
+    ('CCO', 'Marise');
+
+-- exibir dados da tabela curso
+select * from curso;
+
+-- criar tabela aluno
+create table aluno (
+    ra int primary key,
+    nomeAluno varchar(100),
+    bairro varchar(50),
+    fkCurso int,
+    foreign key (fkCurso) references curso(idCurso)
+);
+
+-- inserir dados na tabela aluno
+insert into aluno values 
+    (50000, 'José','Tatuapé',1),
+    (50001, 'João','Centro',2),
+    (50002, 'Maria','Sapopemba',1);
+
+-- exibir dados dos alunos
+select * from aluno;
+
+-- exibir dados dos aluno e seu respecitivo curso
+select * from aluno, curso where fkCurso = idCurso;
+
+-- para adicionar a chave estrangeira com o alter table
+alter table aluno add constraint fk_curso
+     foreign key (fkCurso) references curso (idCurso);
+
+-- para alterar o campo bairro para varchar(80)
+alter table aluno alter column bairro varchar(80);
+
+-- descrever os campos da tabela
+sp_columns aluno;

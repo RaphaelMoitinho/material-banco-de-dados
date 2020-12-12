@@ -1,0 +1,139 @@
+create database jogador_time;
+use jogador_time;
+
+create table times (
+idTimes int primary key,
+nomeTime varchar(35),
+nomeTécnico varchar(35),
+Data_da_fundaçao date
+);
+
+insert into times values 
+(1, 'São Paulo', 'Fernando Diniz', '1930-01-25'),
+(2, 'Corinthians', 'Tiago Nunes', '1910-09-01'),
+(3, 'Santos', 'Jesualdo Ferreira', '1912-04-14'),
+(4, 'Palmeiras', 'Vanderlei Luxemburgo', '1914-08-26');
+
+create table jogadores (
+idJogador int primary key,
+nomeJogador varchar(35),
+Posiçao varchar(30),
+Salario decimal(9,2),
+check (Salario > 0),
+fkTimes int,
+foreign key (fkTimes) references times (idTimes),
+Conselheiro int,
+foreign key (Conselheiro) references jogadores (idJogador)
+);
+
+insert into jogadores values 
+(100, 'Daniel Alves', 'Meia', '100000', 1, null), 
+(101, 'Alexandre Pato', 'Atacante', 50000, 1, 100),
+(102, 'Antony Matheus', 'Atacante', 28000, 1, 101),
+(103, 'Hernanes', 'Meia', 30000, 1, 100),
+(104, 'Cássio Ramos', 'Goleiro', 40000, 2, null),
+(105, 'Pedrinho', 'Meia', 28000, 2, 104),
+(106, 'Ángel Romero', 'Atacante', 34000, 2, 104),
+(107, 'Luan Guilherme', 'Atacante', 30000, 2, 106),
+(108, 'Carlos Andrés', 'Meia', 36000, 3, null),
+(109, 'Lucas Veríssimo', 'Defensor', 30000, 3, 108),
+(110, 'Kaio Jorge', 'Atacante', 27000, 3, 109),
+(111, 'Alison Lopes', 'Meia', 27000, 3, 109),
+(112, 'Felipe Melo', 'Meia', 38000, 4, null),
+(113, 'Dudu', 'Atacante', 40000, 4, null),
+(114, 'Gustavo Scarpa','Meia', 26500, 4, 112),
+(115, 'Willian Gomes', 'Atacante', 24500, 4, 113);
+
+
+create table seguidores (
+fkJogador int,
+foreign key (fkJogador) references jogadores (idJogador),
+idSeguidor int,
+primary key (fkJogador, idSeguidor),
+nomeSeguidor varchar(35),
+nickName varchar(20),
+Sexo char(1),
+check (sexo = 'f' or sexo = 'm' or sexo = 'n')
+);
+
+insert into seguidores values 
+(100, 1, 'Matheus Carvalho', 'MathCarv22', 'm'),
+(100, 2, 'Renata Peixoto', 'RehPeixoto7', 'f'),
+(100, 3, 'José Santana', 'jsantana28', 'm'),
+(101, 1, 'Bruno Sampaio', 'bssantan06', 'm'),
+(103, 1, 'Amanda Fernandez', 'Amandafehz', 'f'),
+(103, 2, 'Katie Miranda', 'KatMih', 'f'),
+(104, 1, 'Sérgio Melo', 'Sergiomeloo', 'm'),
+(104, 2, 'Lucas Mastelini', 'destruidor7694', 'm'),
+(105, 1, 'Gabriela Almeida', 'GabiAlmeidaa', 'n'),
+(106, 1, 'Bernardo Santos', 'bernsan1', 'm'),
+(109, 1, 'Alfredo Beneti', 'alfneti', 'm'),
+(109, 2, 'Bianca Alencar', 'Biancaalencar', 'f'),
+(112, 1, 'Fernando Rodrigues', 'FeeehRodri', 'm'),
+(112, 2, 'Carlos Roberto', 'carlosro44', 'm'),
+(113, 1, 'Gabriel DAngelo', 'dangelo_77', 'm'),
+(113, 2, 'Kaytlin Samara', 'KaySam', 'n'),
+(113, 3, 'Breno Silva', 'Breninhooo', 'm'),
+(113, 4, 'Karina Lopes', 'Kah_Lopes', 'f');
+
+select * from times;
+
+select * from jogadores;
+
+select * from seguidores;
+
+
+select nomeTime, nomeTécnico from times where nomeTime like 's%';
+
+select * from jogadores order by Posiçao desc;
+
+select * from jogadores where posiçao = 'Atacante';
+
+select * from times where nomeTécnico like '%i_';
+
+select * from times order by nomeTécnico asc;
+
+select * from times order by Data_da_fundaçao desc;
+
+update jogadores set Posiçao = 'Atacante' where idJogador = 103;
+
+select * from times, jogadores where idTimes = fkTimes;
+
+select * from times, jogadores where idTimes = fkTimes and nomeTime = 'São Paulo';
+
+select * from jogadores as c, jogadores as j where c.Conselheiro = j.idJogador;
+
+select * from jogadores, times where idTimes = fkTimes;
+
+select * from times, jogadores as j, jogadores as c where j.idJogador = c.Conselheiro and idTimes = j.fkTimes;
+
+select * from times, jogadores as j, jogadores as c where j.idJogador = c.Conselheiro and idTimes = j.fkTimes and j.nomeJogador ='Alexandre Pato';
+
+
+select * from jogadores, seguidores where idJogador = fkJogador;
+
+select * from jogadores, seguidores where idJogador = fkJogador and nomeJogador = 'Dudu';
+
+delete from jogadores where idJogador = 115;
+
+select * from jogadores;
+
+-- Soma
+select sum(Salario) from jogadores;
+select sum(Salario) as 'Total Salario' from jogadores;
+
+-- Media
+select avg(Salario) from jogadores;
+select avg(Salario) as 'Média Salário' from jogadores;
+
+-- Min e Max
+select max(Salario), min(Salario) from jogadores;
+select max(Salario) as 'Salário Máximo', min(Salario) as 'Menor Salário' from jogadores;
+
+-- Contagem
+select count(Salario) as 'Quantidade de salários' from jogadores;
+select count(Salario) as 'Quantidade de salários menor que 30 mil' from jogadores where Salario < 30000;
+
+-- Entre
+select * from jogadores where Salario between 30000 and 50000;
+select count(Salario) as 'Quantidade de salários entre 30 e 50 mil' from jogadores where Salario between 30000 and 50000;

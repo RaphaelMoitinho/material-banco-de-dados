@@ -1,0 +1,76 @@
+create database PraticaFuncionario;
+use PraticaFuncionario;
+
+create table Setor (
+idSetor int primary key auto_increment,
+nomeSetor varchar(45),
+andar char(4));
+
+create table Funcionario (
+idFuncionario int primary key auto_increment,
+fkSetor int,
+foreign key (fkSetor) references Setor (idSetor),
+nomeFuncionario varchar(45),
+telefone char(11),
+salario decimal (9,2),
+check (salario > 0)
+) auto_increment = 300;
+
+create table Acompanhante (
+idAcompanhante int,
+fkFuncionario int,
+foreign key (fkFuncionario) references Funcionario (idFuncionario),
+primary key (idAcompanhante,fkFuncionario),
+nome varchar(45),
+relacao varchar(12),
+datanascimento date) ;
+
+ insert into Setor values
+ (null,'compras',1),
+ (null,'estoque',2),
+ (null,'faturamento',3),
+ (null,'financeiro',4);
+ 
+ insert into Funcionario values
+ (null,1,'Fabiano','11950681277',3000),
+ (null,1,'Isabella','11976574322',5000),
+ (null,2,'Cristiano','11926476588',3000),
+ (null,3,'Luciana','11976545322',4000),
+ (null,4,'Sarah','11976576544',5000);
+ 
+ insert into Acompanhante values
+ (1,300,'Marta','mae','1968-10-15'),
+ (2,300,'Jose','pai','1968-02-08'),
+ (1,301,'Taiza','amiga','2001-12-04'),
+ (1,302,'Lady','mae','1958-05-15'),
+ (1,303,'Guilherme','namorado','2003-05-27');
+ 
+ select * from Acompanhante order by fkFuncionario;
+  select * from Setor;
+  select * from Funcionario;
+
+ 
+select * from Setor, Funcionario where fkSetor = idSetor;
+select * from Setor, Funcionario where fkSetor = idSetor and nomeSetor='compras';
+select * from Funcionario , Acompanhante where fkFuncionario = idFuncionario;
+select * from Funcionario , Acompanhante where fkFuncionario = idFuncionario and nomeFuncionario='Fabiano';
+
+select * from Funcionario , Setor, Acompanhante where fkFuncionario = idFuncionario and fkSetor=idSetor; -- aparecer todas as tab
+
+select avg(Salario) from Funcionario;
+select avg(Salario) as 'Média Salário' from Funcionario;
+select avg(Salario) as 'Média Salário acima 3k' from Funcionario where salario > 3000; -- media do salario acima de 3k
+
+
+select sum(Salario) as 'Total Salário' from Funcionario;
+select sum(Salario) as 'Total Salário acima 3k' from Funcionario where salario>3000; -- total dos salarios acima 3k
+
+select count(Salario) as 'Quantidade de salários' from Funcionario;
+
+select count(Salario) as 'Quantidade de salários maior que 3 mil' from Funcionario where Salario > 3000;
+
+select max(Salario) as 'maior salario', min(Salario) as 'menor salario' from Funcionario;
+
+select count(Salario) as 'Quantidade de salários' from Funcionario;
+
+select count(Salario) as 'Quantidade de salários menor que 5 mil' from Funcionario where Salario < 5000;

@@ -1,0 +1,18 @@
+create database ExemploTransacao;
+use ExemploTransacao;
+create table Aluno (
+   ra int primary key,
+   nomeAluno varchar(45),
+   bairro varchar(45)
+);
+insert into Aluno values (10000, 'Mickey', 'Disney'), 
+						 (10001, 'Pateta', 'Orlando'),
+						 (10002, 'Pluto', 'Florida');
+-- Conceito de transação (transaction)
+start transaction;		-- inicia uma transação
+select * from Aluno;
+delete from Aluno where ra = 10001;
+select * from Aluno;
+-- finalizar a transação: rollback ou commit
+rollback;			-- o rollback desfaz todas as alterações feitas entre o start transaction e o rollback
+select * from Aluno;                         

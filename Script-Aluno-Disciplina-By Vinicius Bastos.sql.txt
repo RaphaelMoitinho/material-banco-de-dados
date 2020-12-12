@@ -1,0 +1,90 @@
+create database BDAlunoDisciplina;
+use BdAlunoDisciplina;
+
+-- Criação da tabela Aluno
+create table Aluno(
+RA int primary key auto_increment,
+nomeAluno varchar(45),
+bairro varchar(45)
+)auto_increment = 1000;
+
+-- Criação da tabela Disciplina
+create table Disciplina(
+idDisciplina int primary key auto_increment,
+nomeDisciplina varchar(45)
+);
+
+-- Criação da tabela AlunoDisciplina (tabela associativa)
+create table AlunoDisciplina(
+fkAluno int,
+foreign key (fkAluno) references Aluno(RA),
+fkDisciplina int,
+foreign key (fkDisciplina) references Disciplina(idDisciplina),
+perLetivo int,
+primary key(perLetivo, fkAluno, fkDisciplina),  -- chave primária composta
+media decimal(3, 1),
+check (media >= 0 and media <=10),
+faltas int,
+check (faltas >= 0)
+);
+
+-- Inserção de dados na tabela Aluno
+insert into Aluno values
+(null, 'Zélão', 'Santa Maria'),
+(null, 'Carlitos', 'Fundação');
+
+-- Inserção de dados na tabela Disciplina
+insert into Disciplina values
+(null, 'Banco de Dados'),
+(null, 'Algoritmos');
+
+-- Inserção de dados na tabela AlunoDisciplina
+insert into AlunoDisciplina values
+(1000, 1, 20201, 5.0, 3),
+(1000, 2, 20201, 8.0, 2),
+(1000, 1, 20202, 9.0, 1),
+(1001, 1, 20201, 9.0, 4),
+(1001, 2, 20201, 7.0, 1);
+
+-- Exibir os dados de cada tabela separadamente
+select * from Aluno;
+select * from Disciplina;
+select * from AlunoDisciplina;
+
+-- Exibir os dados dos alunos e das disciplinas correspondentes
+select * from Aluno, Disciplina, AlunoDisciplina where fkAluno = RA and fkDisciplina = idDisciplina;
+
+-- Exibir os dados dos alunos e das suas disciplinas, mas somente de uma disciplina
+select * from Aluno, Disciplina, AlunoDisciplina where fkAluno = RA and fkDisciplina = idDisciplina and idDisciplina = 1;
+
+-- Exibir os dados de um aluno e os dados das disciplinas desse aluno
+select * from Aluno, Disciplina, AlunoDisciplina where fkAluno = RA and fkDisciplina = idDisciplina and RA = 1001;
+
+-- Exibir a soma das médias e a soma das quantidades de faltas
+select sum(media) as 'Soma das medias', sum(faltas) as 'Soma das faltas' from AlunoDisciplina;
+
+-- Exibir a média das médias e a média das quantidades de faltas
+select round(avg(media),2) as 'Media das medias', round(avg(faltas),2) as 'Media das faltas' from AlunoDisciplina;
+
+-- Exibir a maior e a menor média
+select max(media) as 'Maior media', min(media) as 'Menor media' from Alunodisciplina;
+
+-- Exibir a maior e a menor média agrupado por disciplina
+select fkDisciplina, max(media) as 'Maior media', min(media) as 'Menor media' from Alunodisciplina group by fkDisciplina;
+
+-- Exibir a maior e a menor média agrupado por aluno
+select fkAluno, max(media) as 'Maior media', min(media) as 'Menor media' from Alunodisciplina group by fkAluno;
+
+-- Exibir apenas as médias da tabela AlunoDisciplina
+select media from AlunoDisciplina;
+
+-- Exibir as médias distintas da tabela AlunoDisciplina
+select distinct media from AlunoDisciplina;
+
+-- Exibir a quantidade de médias da tabela AlunoDisciplina
+select count(media) from AlunoDisciplina;
+
+-- Exibir a quantidade de médias distintas da tabela AlunoDisciplina
+select count(distinct media) from AlunoDisciplina;
+
+

@@ -1,0 +1,90 @@
+create database EscolaIdioma;
+use EscolaIdioma;
+
+-- Criar tabela Aluno
+create table Aluno (
+   ra int primary key auto_increment,
+   nomeAluno varchar(45),
+   bairro varchar(45)
+) auto_increment = 1000;
+
+-- Criar tabela Curso
+create table Curso (
+   idCurso int primary key auto_increment,
+   nomeCurso varchar(45),
+   coordenador varchar(45)
+);
+
+-- Criar a tabela associativa entre Aluno e Curso
+create table AlunoCurso (
+   fkRa int,
+   foreign key (fkRa) references Aluno(ra),
+   fkCurso int,
+   foreign key (fkCurso) references Curso(idCurso),
+   primary key (fkRa, fkCurso),   -- chave primária composta pelas duas chaves estrangeiras acima
+   dataInicio date,
+   nivel char(2),
+   media decimal(3,1),
+   check (media >=0 and media <= 10)
+);
+
+-- Inserir dados na tabela Aluno
+insert into Aluno values (null,'Maria', 'Saúde'), (null, 'João', 'Consolação'); 
+
+-- Exibir dados dos alunos
+select * from Aluno;
+
+-- Inserir dados na tabela Curso
+insert into Curso values (null, 'Espanhol', 'Juan'), (null, 'Inglês', 'Beth');
+
+-- Exibir dados dos cursos
+select * from Curso;
+
+-- Inserir dados na tabela associativa AlunoCurso
+insert into AlunoCurso values (1000, 1, '2015-02-01', 'A1', 8.0),
+                              (1000, 2, '2017-02-01', 'I3', 9.0),
+                              (1001, 1, '2020-02-01', 'B1', 9.0),
+                              (1001, 2, '2019-02-01', 'I2', 7.0);
+
+-- Exibir dos dados da tabela AlunoCurso
+select * from AlunoCurso;
+
+-- Exibir os dados dos alunos e dos cursos correspondentes
+select * from Aluno, Curso, AlunoCurso where fkRa = ra and fkCurso = idCurso;                               
+select * from Aluno, AlunoCurso, Curso where fkRa = ra and fkCurso = idCurso;
+
+-- Exibir os dados dos alunos e dos cursos correspondentes, mas somente de um curso
+select * from Aluno, Curso, AlunoCurso where fkRa = ra and fkCurso = idCurso and nomeCurso='Espanhol';
+
+-- Exibir os dados dos alunos e dos cursos correpondentes, mas somente de um aluno                                 
+select * from Aluno, Curso, AlunoCurso where fkRa = ra and fkCurso = idCurso and nomeAluno='João';
+
+-- Exibir a soma das médias e a média das médias
+select sum(media) as 'Soma das médias', avg(media) as 'Média das médias' from AlunoCurso;
+
+-- Exibir a maior e a menor média
+select max(media) as 'Maior média', min(media) as 'Menor média' from AlunoCurso;
+
+-- Exibir a maior e a menor média agrupado por curso
+select max(media) as 'Maior média', min(media) as 'Menor média' from AlunoCurso group by fkCurso;
+select fkCurso as idCurso, max(media) as 'Maior média', min(media) as 'Menor média' from AlunoCurso group by fkCurso;
+select nomeCurso, max(media) as 'Maior média', min(media) as 'Menor média'
+       from Curso, AlunoCurso where fkCurso=idCurso group by fkCurso;
+       
+-- Exibir a maior e a menor média agrupado por aluno
+select fkRa, max(media) as 'Maior média', min(media) as 'Menor média' from AlunoCurso group by fkRa;
+select nomeAluno, max(media) as 'Maior média', min(media) as 'Menor média' 
+       from Aluno, AlunoCurso where fkRa = ra group by fkRa;
+       
+-- Exibir apenas as médias da tabela AlunoCurso
+select media from AlunoCurso;
+
+-- Exibir as médias distintas da tabela AlunoCurso
+select distinct media from AlunoCurso;
+
+-- Exibir a quantidade de médias da tabela AlunoCurso
+select count(media) as 'Quantidade de médias' from AlunoCurso;       
+
+-- Exibir a quantidade de médias distintas da tabela AlunoCurso
+select count(distinct media) as 'Quantidade de médias distintas' from AlunoCurso;       
+       
